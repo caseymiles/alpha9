@@ -1,11 +1,12 @@
 {
-    "cleanUrls": false,
+    "routes": [
+        { "src": "^/art$", "dest": "/art.html" },
+        { "src": "^/videos$", "dest": "/videos.html" },
+        { "src": "^/apps$", "dest": "/apps.html" },
+        { "src": "^/songs$", "dest": "/songs.html" },
+        { "src": "^/podcasts$", "dest": "/podcasts.html" }
+    ],
     "rewrites": [
-      { "source": "/art", "destination": "/art.html" },
-      { "source": "/animations", "destination": "/animations.html" },
-      { "source": "/apps", "destination": "/apps.html" },
-      { "source": "/podcasts", "destination": "/podcasts.html" },
-      { "source": "/songs", "destination": "/songs.html" },
-      { "source": "/tv", "destination": "/tv.html" }
+        { "source": "/api/files", "destination": "/api/files.js" }
     ]
-  }
+}

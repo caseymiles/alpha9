@@ -1,30 +1,36 @@
-// Load files dynamically for grids or lists
-function loadLocalFiles(folder, containerId, type = 'image') {
+// Function to dynamically load files
+function loadFiles(folder, containerId, type = 'image') {
     const container = document.getElementById(containerId);
-    container.innerHTML = ''; // Clear the container
+    container.innerHTML = ''; // Clear container
 
-    // Hardcoded list of files for demonstration purposes
-    const files = {
-        'src/art': ['art1.jpg', 'art2.jpg', 'art3.jpg'], // Add your actual art files here
-        'src/videos': ['video1.mp4', 'video2.mp4'],
-        'src/apps': ['app1.apk', 'app2.apk'],
-        'src/podcasts': ['podcast1.mp3', 'podcast2.mp3'],
-        'src/songs': ['song1.mp3', 'song2.mp3']
-    };
+    fetch(`/api/files?folder=${folder}`)
+        .then((response) => response.json())
+        .then((files) => {
+            files.forEach((file) => {
+                const link = document.createElement('a');
+                link.href = `/${folder}/${file}`;
+                link.target = '_blank';
 
-    if (!files[folder]) return;
+                if (type === 'image') {
+                    const thumbnail = document.createElement('img');
+                    thumbnail.src = `/${folder}/${file}`;
+                    thumbnail.alt = file;
+                    thumbnail.className = 'thumbnail';
+                    link.appendChild(thumbnail);
+                } else if (type === 'video') {
+                    const video = document.createElement('video');
+                    video.src = `/${folder}/${file}`;
+                    video.controls = true;
+                    video.className = 'thumbnail';
+                    link.appendChild(video);
+                } else {
+                    link.textContent = file;
+                }
 
-    files[folder].forEach((file) => {
-        const link = document.createElement('a');
-        link.href = `${folder}/${file}`;
-        link.target = '_blank'; // Open in a new tab
-
-        const thumbnail = document.createElement('img');
-        thumbnail.src = `${folder}/${file}`;
-        thumbnail.alt = file;
-        thumbnail.className = 'thumbnail';
-
-        link.appendChild(thumbnail);
-        container.appendChild(link);
-    });
+                container.appendChild(link);
+            });
+        })
+        .catch((error) => {
+            console.error(`Error loading files from ${folder}:`, error);
+        });
 }

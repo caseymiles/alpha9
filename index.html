@@ -3,20 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alpha9 - Home</title>
+    <title>Alpha9</title>
     <link rel="stylesheet" href="styles/style.css">
-    <script src="scripts/script.js" defer></script>
 </head>
 <body>
-    <div class="background-image"></div>
-    <div class="left-bar">
-        <p class="menu-item" onclick="navigate('index.html')">Home</p>
-        <p class="menu-item" onclick="navigate('art.html')">Art Gallery</p>
-        <p class="menu-item" onclick="navigate('animations.html')">Animations</p>
-        <p class="menu-item" onclick="navigate('apps.html')">Android Apps</p>
-        <p class="menu-item" onclick="navigate('podcasts.html')">Podcasts</p>
-        <p class="menu-item" onclick="navigate('songs.html')">Songs</p>
-        <p class="menu-item" onclick="navigate('tv.html')">TV Stations</p>
-    </div>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="art.html">Art</a></li>
+                <li><a href="videos.html">Videos</a></li>
+                <li><a href="apps.html">Apps</a></li>
+                <li><a href="songs.html">Songs</a></li>
+                <li><a href="podcasts.html">Podcasts</a></li>
+            </ul>
+        </nav>
+    </header>
+    <h1>Welcome to Alpha9</h1>
+
+    <section>
+        <h2>Art</h2>
+        <div id="art-container" class="grid-container"></div>
+    </section>
+
+    <section>
+        <h2>Videos</h2>
+        <div id="video-container" class="grid-container"></div>
+    </section>
+
+    <section>
+        <h2>Apps</h2>
+        <div id="app-container" class="grid-container"></div>
+    </section>
+
+    <script src="scripts/script.js"></script>
+    <script>
+        // Dynamically load files for each section
+        loadFiles('art', 'art-container', 'image');
+        loadFiles('videos', 'video-container', 'video');
+        loadFiles('apps', 'app-container');
+    </script>
 </body>
 </html>
