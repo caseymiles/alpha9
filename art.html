@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Art Gallery</title>
+    <link rel="stylesheet" href="styles/style.css">
+    <script src="scripts/script.js" defer></script>
+</head>
+<body>
+    <div class="background-image"></div>
+    <div class="left-bar">
+        <p class="menu-item" onclick="navigate('index.html')">Home</p>
+        <p class="menu-item" onclick="navigate('art.html')">Art Gallery</p>
+        <p class="menu-item" onclick="navigate('animations.html')">Animations</p>
+        <p class="menu-item" onclick="navigate('apps.html')">Android Apps</p>
+        <p class="menu-item" onclick="navigate('podcasts.html')">Podcasts</p>
+        <p class="menu-item" onclick="navigate('songs.html')">Songs</p>
+        <p class="menu-item" onclick="navigate('tv.html')">TV Stations</p>
+    </div>
+    <main>
+        <div id="art-container" class="grid"></div>
+    </main>
+    <script>
+        loadLocalFiles('src/art', 'art-container', 'image');
+    </script>
+</body>
+</html>
