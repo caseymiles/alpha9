@@ -1,0 +1,11 @@
+{
+    "cleanUrls": false,
+    "rewrites": [
+      { "source": "/art", "destination": "/art.html" },
+      { "source": "/animations", "destination": "/animations.html" },
+      { "source": "/apps", "destination": "/apps.html" },
+      { "source": "/podcasts", "destination": "/podcasts.html" },
+      { "source": "/songs", "destination": "/songs.html" },
+      { "source": "/tv", "destination": "/tv.html" }
+    ]
+  }
