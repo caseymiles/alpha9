@@ -5,44 +5,210 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alpha9</title>
     <link rel="stylesheet" href="styles/style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* Prevent scrolling */
+            background-color: black; /* Fallback for areas without the image */
+        }
+
+        .background-image {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('images/background.jpg') no-repeat center center fixed;
+            background-size: cover;
+            z-index: -2; /* Ensure it's behind everything */
+        }
+
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Place the canvas above the background image */
+        }
+
+        .left-bar {
+            width: 200px;
+            height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+            z-index: 1; /* Bring left-bar above the canvas */
+        }
+
+        .left-bar ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .left-bar ul li {
+            margin-bottom: 15px;
+        }
+
+        .left-bar ul li a {
+            color: #fff;
+            text-decoration: none;
+            display: block;
+            padding: 10px;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+
+        .left-bar ul li a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .video-container {
+            position: absolute;
+            top: 0.5in;
+            left: 3.0in;
+            z-index: 1; /* Bring video container above the canvas */
+            cursor: grab;
+        }
+
+        video {
+            width: 420px;
+            height: 420px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .video-container:active {
+            cursor: grabbing;
+        }
+
+        .speaker-icon {
+            position: fixed;
+            bottom: 20px; /* Distance from bottom edge */
+            left: 20px; /* Distance from left edge */
+            width: 50px;
+            height: 50px;
+            background: url('images/soundon.jpg') no-repeat center center;
+            background-size: contain;
+            cursor: pointer;
+            z-index: 2; /* Above other content */
+            border-radius: 10px; /* Rounded corners */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2), inset 0 -2px 3px rgba(255, 255, 255, 0.3); /* Bevel effect */
+            background-color: rgba(255, 255, 255, 0.1); /* Subtle background */
+        }
+
+        .speaker-icon:active {
+            box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.2), 0 -2px 3px rgba(255, 255, 255, 0.1); /* Pressed effect */
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <nav>
-            <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="art.html">Art</a></li>
-                <li><a href="animations.html">Animations</a></li>
-                <li><a href="apps.html">Apps</a></li>
-                <li><a href="songs.html">Songs</a></li>
-                <li><a href="podcasts.html">Podcasts</a></li>
-                <li><a href="tv.html">TV Stations</a></li>
-            </ul>
-        </nav>
-    </header>
-    <h1>Welcome to Alpha9</h1>
-
-    <section>
-        <h2>Art</h2>
-        <div id="art-container" class="grid-container"></div>
-    </section>
-
-    <section>
-        <h2>Videos</h2>
-        <div id="video-container" class="grid-container"></div>
-    </section>
-
-    <section>
-        <h2>Apps</h2>
-        <div id="app-container" class="grid-container"></div>
-    </section>
-
-    <script src="scripts/script.js"></script>
+    <div class="background-image"></div>
+    <canvas id="matrix"></canvas>
+    <div class="left-bar">
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="art.html">Art Gallery</a></li>
+            <li><a href="animations.html">Animations</a></li>
+            <li><a href="apps.html">Android Apps</a></li>
+            <li><a href="podcasts.html">Podcasts</a></li>
+            <li><a href="songs.html">Songs</a></li>
+            <li><a href="books.html">Books</a></li> <!-- New Books link -->
+            <li><a href="password.html">Resume</a></li>
+            <li><a href="training.html">Training Videos</a></li>
+            <li><a href="contact.html">Contact Info</a></li>
+        </ul>
+    </div>
+    <div class="video-container" id="video-container">
+        <video controls id="main-video">
+            <source src="videos/Welcome%20vid.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+    <div class="speaker-icon" id="speaker"></div>
+    <audio id="background-audio" loop>
+        <source src="songs/Recognizer.mp3" type="audio/mpeg">
+        Your browser does not support the audio tag.
+    </audio>
     <script>
-        // Dynamically load files for each section
-        loadFiles('art', 'art-container', 'image');
-        loadFiles('videos', 'video-container', 'video');
-        loadFiles('apps', 'app-container');
+        const canvas = document.getElementById("matrix");
+        const ctx = canvas.getContext("2d");
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const letters = "CASEYMILESISAWESOME0123456789";
+        const fontSize = 16;
+        const columns = canvas.width / fontSize;
+
+        const drops = Array.from({ length: columns }).fill(1);
+
+        function drawMatrix() {
+            ctx.fillStyle = "rgba(0, 0, 0, 0.06)";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = "#0F0"; // Bright green color
+            ctx.font = `${fontSize}px monospace`;
+
+            drops.forEach((y, x) => {
+                const text = letters[Math.floor(Math.random() * letters.length)];
+                ctx.fillText(text, x * fontSize, y * fontSize);
+
+                if (y * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[x] = 0;
+                }
+
+                drops[x] += 0.9;
+            });
+        }
+
+        setInterval(drawMatrix, 80);
+
+        // Background Audio Control
+        const audio = document.getElementById("background-audio");
+        const speaker = document.getElementById("speaker");
+        const video = document.getElementById("main-video");
+
+        // Start Matrix animation and play audio
+        function startAudio() {
+            audio.play().catch(() => {
+                setTimeout(() => audio.play().catch(() => console.log("Audio playback blocked.")), 2000);
+            });
+        }
+
+        startAudio();
+
+        // Handle speaker toggle
+        speaker.addEventListener("click", () => {
+            if (audio.muted) {
+                audio.muted = false;
+                speaker.style.backgroundImage = "url('images/soundon.jpg')";
+                audio.play();
+            } else {
+                audio.muted = true;
+                speaker.style.backgroundImage = "url('images/soundoff.jpg')";
+            }
+        });
+
+        // Reduce audio volume when video is playing
+        video.addEventListener("play", () => {
+            audio.volume = 0.25; // Reduce background audio to 5%
+        });
+
+        // Restore audio volume when video is paused or ends
+        video.addEventListener("pause", () => {
+            audio.volume = 0.75; // Restore to full volume
+        });
+
+        video.addEventListener("ended", () => {
+            audio.volume = 0.75; // Restore to full volume
+        });
     </script>
 </body>
 </html>

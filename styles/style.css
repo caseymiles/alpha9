@@ -1,3 +1,4 @@
+/* General Styles */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -10,7 +11,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: url('images/background.jpg') no-repeat center center fixed;
+    background: url('images/Casey1.jpg') no-repeat center center fixed;
     background-size: cover;
     z-index: -1;
 }
@@ -26,17 +27,71 @@ body {
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
 }
 
-.menu-item {
-    color: #fff;
-    margin: 15px 0;
-    cursor: pointer;
+.left-bar ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
 }
 
-.menu-item:hover {
-    text-decoration: underline;
+.left-bar ul li {
+    margin-bottom: 15px;
+}
+
+.left-bar ul li a {
+    color: #fff;
+    text-decoration: none;
+    display: block;
+    padding: 10px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.left-bar ul li a:hover {
+    background-color: rgba(255, 255, 255, 0.2);
 }
 
 main {
     margin-left: 220px;
     padding: 20px;
+    color: #333;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    /* Adjust layout for smaller screens */
+    .left-bar {
+        position: relative; /* Make sidebar part of the flow */
+        width: 100%; /* Full width */
+        height: auto; /* Adjust height */
+        padding: 10px;
+    }
+
+    .left-bar ul li {
+        margin-bottom: 10px; /* Reduce spacing */
+    }
+
+    .left-bar ul li a {
+        text-align: center; /* Center links */
+    }
+
+    main {
+        margin-left: 0; /* No margin */
+        padding: 10px; /* Smaller padding */
+    }
+}
+
+@media (max-width: 480px) {
+    /* Further adjustments for very small screens */
+    .left-bar ul li a {
+        padding: 8px; /* Smaller padding for links */
+        font-size: 14px; /* Smaller font size */
+    }
+
+    main {
+        padding: 5px; /* Reduce padding */
+    }
+
+    .background-image {
+        background-size: contain; /* Better fit for small screens */
+    }
 }

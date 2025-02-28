@@ -5,10 +5,65 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Android Apps</title>
     <link rel="stylesheet" href="styles/style.css">
-    <script src="scripts/script.js" defer></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden; /* Ensure no scrollbars */
+            font-family: Arial, sans-serif;
+        }
+
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Push canvas behind other elements */
+        }
+
+        .apps-list {
+            position: relative;
+            z-index: 1;
+            background-color: rgba(255, 255, 255, 0.9);
+            color: #000;
+            border: 1px solid #ccc;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            max-width: 400px;
+            margin: 50px auto;
+            transform: translateX(-6in); /* Move left */
+        }
+
+        .apps-list h1 {
+            margin-top: 0;
+            font-size: 24px;
+        }
+
+        .app-item {
+            margin: 10px 0;
+        }
+
+        .app-item a {
+            text-decoration: none;
+            color: #000;
+            font-weight: bold;
+        }
+
+        .app-item a:hover {
+            text-decoration: underline;
+        }
+
+        .dat-gui {
+            position: relative;
+            z-index: 1;
+            margin-top: 2px; /* Space below the white box */
+            max-width: 600px;
+            margin-left: 0.5in; /* Align below the white box */
+        }
+    </style>
 </head>
 <body>
-    <div class="background-image"></div>
     <div class="left-bar">
         <ul>
             <li><a href="index.html">Home</a></li>
@@ -17,14 +72,162 @@
             <li><a href="apps.html">Android Apps</a></li>
             <li><a href="podcasts.html">Podcasts</a></li>
             <li><a href="songs.html">Songs</a></li>
-            <li><a href="tv.html">TV Stations</a></li>
+            <li><a href="books.html">Books</a></li>
+            <li><a href="password.html">Resume</a></li>
+            <li><a href="training.html">Training Videos</a></li>
+            <li><a href="contact.html">Contact Info</a></li>
         </ul>
     </div>
     <main>
-        <ul id="apps-list"></ul>
+        <div class="apps-list">
+            <h1>Available Android Apps</h1>
+            <div id="app-items">
+                <!-- App links will be dynamically added here -->
+            </div>
+        </div>
+        <div id="gui-container" class="dat-gui">
+            <!-- GUI will appear here -->
+        </div>
     </main>
+    <script src="scripts/three.min.js"></script>
+    <script src="scripts/OrbitControls.js"></script>
+    <script src="scripts/Water.js"></script>
+    <script src="scripts/Sky.js"></script>
+    <script src="scripts/dat.gui.min.js"></script>
     <script>
-        loadLocalFiles('src/apps', 'apps-list', 'link');
+        let scene, camera, renderer, water, sun, controls;
+
+        function init() {
+            // Scene Setup
+            scene = new THREE.Scene();
+
+            // Camera Setup
+            camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 1, 20000);
+            camera.position.set(30, 30, 100);
+
+            // Renderer Setup
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.toneMapping = THREE.ACESFilmicToneMapping;
+            document.body.appendChild(renderer.domElement);
+
+            // Controls Setup
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.maxPolarAngle = Math.PI * 0.495;
+            controls.target.set(0, 10, 0);
+            controls.minDistance = 40.0;
+            controls.maxDistance = 200.0;
+
+            // Water Setup
+            const waterGeometry = new THREE.PlaneGeometry(10000, 10000);
+            water = new THREE.Water(
+                waterGeometry,
+                {
+                    textureWidth: 512,
+                    textureHeight: 512,
+                    waterNormals: new THREE.TextureLoader().load('images/waternormals.jpg', function (texture) {
+                        texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+                    }),
+                    sunDirection: new THREE.Vector3(),
+                    sunColor: 0xffffff,
+                    waterColor: 0x001e0f,
+                    distortionScale: 3.7,
+                }
+            );
+            water.rotation.x = -Math.PI / 2;
+            scene.add(water);
+
+            // Sky Setup
+            const sky = new THREE.Sky();
+            sky.scale.setScalar(10000);
+            scene.add(sky);
+
+            sun = new THREE.Vector3();
+            const skyUniforms = sky.material.uniforms;
+            skyUniforms['turbidity'].value = 10;
+            skyUniforms['rayleigh'].value = 2;
+            skyUniforms['mieCoefficient'].value = 0.005;
+            skyUniforms['mieDirectionalG'].value = 0.8;
+
+            // GUI Controls
+            const gui = new dat.GUI({ autoPlace: false });
+            document.getElementById("gui-container").appendChild(gui.domElement);
+
+            const params = {
+                elevation: 2,
+                azimuth: 180,
+                waterColor: '#001e0f',
+                waveIntensity: 3.7
+            };
+
+            // Sky settings
+            gui.add(params, 'elevation', 0, 90, 0.1).name('Sun Elevation').onChange(() => updateSun(params));
+            gui.add(params, 'azimuth', -180, 180, 0.1).name('Sun Azimuth').onChange(() => updateSun(params));
+
+            // Water settings
+            gui.addColor(params, 'waterColor').name('Water Color').onChange(() => {
+                water.material.uniforms['waterColor'].value.setHex(parseInt(params.waterColor.replace('#', '0x')));
+            });
+            gui.add(params, 'waveIntensity', 0, 10, 0.1).name('Wave Intensity').onChange(() => {
+                water.material.uniforms['distortionScale'].value = params.waveIntensity;
+            });
+
+            function updateSun(params) {
+                const phi = THREE.MathUtils.degToRad(90 - params.elevation);
+                const theta = THREE.MathUtils.degToRad(params.azimuth);
+
+                sun.setFromSphericalCoords(1, phi, theta);
+                sky.material.uniforms['sunPosition'].value.copy(sun);
+                water.material.uniforms['sunDirection'].value.copy(sun).normalize();
+            }
+
+            updateSun(params);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            render();
+        }
+
+        function render() {
+            water.material.uniforms['time'].value += 1.0 / 60.0;
+            controls.update();
+            renderer.render(scene, camera);
+        }
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        init();
+        animate();
+
+        // Dynamically populate apps
+        document.addEventListener("DOMContentLoaded", function () {
+            const appItems = document.getElementById('app-items');
+            const apps = [
+                { name: "AirScan4", file: "AirScan4.apk" },
+                { name: "DayTripper6", file: "DayTripper6.apk" },
+                { name: "GPS_Tool2", file: "GPS_Tool2.apk" },
+                { name: "Pong7", file: "Pong7.apk" },
+                { name: "RecipeAi9", file: "RecipeAi9.apk" }
+            ];
+
+            apps.forEach(app => {
+                const item = document.createElement('div');
+                item.className = 'app-item';
+
+                const link = document.createElement('a');
+                link.href = `apps/${app.file}`;
+                link.download = app.file;
+                link.textContent = app.name;
+
+                item.appendChild(link);
+                appItems.appendChild(item);
+            });
+        });
     </script>
 </body>
 </html>

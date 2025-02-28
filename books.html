@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Books</title>
+    <link rel="stylesheet" href="styles/style.css">
+    <style>
+        /* Background image */
+        .background-image {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('images/background.jpg') no-repeat center center fixed;
+            background-size: cover;
+            z-index: -1;
+        }
+
+        /* Styling for the book list */
+        .book-list {
+            position: absolute;
+            top: 1in;
+            left: 3in; /* Adjusted to 3 inches from the left */
+            background-color: #fff;
+            color: #000;
+            border: 1px solid #ccc;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            max-width: 600px;
+        }
+
+        .book-list h1 {
+            margin-top: 0;
+            font-size: 24px;
+        }
+
+        .book-item {
+            margin: 10px 0;
+        }
+
+        .book-item a {
+            text-decoration: none;
+            color: #000;
+            font-weight: bold;
+        }
+
+        .book-item a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="background-image"></div>
+    <div class="left-bar">
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="art.html">Art Gallery</a></li>
+            <li><a href="animations.html">Animations</a></li>
+            <li><a href="apps.html">Android Apps</a></li>
+            <li><a href="podcasts.html">Podcasts</a></li>
+            <li><a href="songs.html">Songs</a></li>
+            <li><a href="books.html">Books</a></li>
+            <li><a href="password.html">Resume</a></li>
+            <li><a href="training.html">Training Videos</a></li>
+            <li><a href="contact.html">Contact Info</a></li>
+        </ul>
+    </div>
+    <main>
+        <div class="book-list">
+            <h1>Available Books</h1>
+            <div id="book-items"></div>
+        </div>
+    </main>
+    <script>
+        // JavaScript to dynamically display the books
+        document.addEventListener("DOMContentLoaded", function () {
+            const bookItems = document.getElementById('book-items');
+            const books = [
+                "eBook Gardening in SoCal Simsee.pdf",
+                "eBook Solid Business Complete.pdf",
+                "eBook Version DHS and Ai.pdf",
+                "Full Spectrum Cyber Attack Mitigation.pdf"
+            ];
+
+            // Generate a list of book links
+            books.forEach(book => {
+                const bookName = book.replace(/\.[^/.]+$/, ""); // Remove file extension
+                const item = document.createElement('div');
+                item.className = 'book-item';
+
+                const link = document.createElement('a');
+                link.href = `books/${book}`;
+                link.download = book; // Force download when clicked
+                link.textContent = bookName;
+
+                item.appendChild(link);
+                bookItems.appendChild(item);
+            });
+        });
+    </script>
+</body>
+</html>

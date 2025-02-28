@@ -17,14 +17,6 @@ function loadFiles(folder, containerId, type = 'image') {
                     thumbnail.alt = file;
                     thumbnail.className = 'thumbnail';
                     link.appendChild(thumbnail);
-                } else if (type === 'video') {
-                    const video = document.createElement('video');
-                    video.src = `/${folder}/${file}`;
-                    video.controls = true;
-                    video.className = 'thumbnail';
-                    link.appendChild(video);
-                } else {
-                    link.textContent = file;
                 }
 
                 container.appendChild(link);

@@ -1,12 +1,11 @@
 {
-    "routes": [
-        { "src": "^/art$", "dest": "/art.html" },
-        { "src": "^/videos$", "dest": "/videos.html" },
-        { "src": "^/apps$", "dest": "/apps.html" },
-        { "src": "^/songs$", "dest": "/songs.html" },
-        { "src": "^/podcasts$", "dest": "/podcasts.html" }
-    ],
     "rewrites": [
-        { "source": "/api/files", "destination": "/api/files.js" }
+        { "source": "/", "destination": "/index.html" },
+        { "source": "/art", "destination": "/art.html" },
+        { "source": "/animations", "destination": "/animations.html" },
+        { "source": "/apps", "destination": "/apps.html" },
+        { "source": "/songs", "destination": "/songs.html" },
+        { "source": "/podcasts", "destination": "/podcasts.html" },
+        { "source": "/api/files", "destination": "/api/list-files.js" }
     ]
 }

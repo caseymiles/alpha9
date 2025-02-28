@@ -2,15 +2,13 @@
   "name": "Alpha9",
   "version": "1.0.0",
   "description": "A simple webpage project called Alpha9.",
-  "main": "src/scripts/main.js",
+  "main": "scripts/script.js",
   "scripts": {
-    "start": "live-server src",
-    "build": "echo 'Build step not defined'",
+    "start": "live-server",
     "test": "echo 'No tests defined'"
   },
-  "author": "Your Name",
+  "author": "Casey",
   "license": "ISC",
-  "dependencies": {},
   "devDependencies": {
     "live-server": "^1.2.1"
   }

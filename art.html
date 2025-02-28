@@ -4,8 +4,82 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Art Gallery</title>
+    <!-- Link to the external stylesheet -->
     <link rel="stylesheet" href="styles/style.css">
-    <script src="scripts/script.js" defer></script>
+    <style>
+        .background-image {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('images/background.jpg') no-repeat center center fixed;
+            background-size: cover;
+            z-index: -1;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .left-bar {
+            width: 200px;
+            height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+        }
+
+        .left-bar ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .left-bar ul li {
+            margin-bottom: 15px;
+        }
+
+        .left-bar ul li a {
+            color: #fff;
+            text-decoration: none;
+            display: block;
+            padding: 10px;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+
+        .left-bar ul li a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        main {
+            margin-left: 220px;
+            padding: 20px;
+            color: #333;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            padding: 20px;
+        }
+
+        .thumbnail {
+            width: 100%;
+            height: 400px; /* Fixed height */
+            object-fit: cover; /* Ensures uniform size */
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
     <div class="background-image"></div>
@@ -17,14 +91,79 @@
             <li><a href="apps.html">Android Apps</a></li>
             <li><a href="podcasts.html">Podcasts</a></li>
             <li><a href="songs.html">Songs</a></li>
-            <li><a href="tv.html">TV Stations</a></li>
+            <li><a href="books.html">Books</a></li> <!-- New Books link -->
+            <li><a href="password.html">Resume</a></li>
+            <li><a href="training.html">Training Videos</a></li>
+            <li><a href="contact.html">Contact Info</a></li>
         </ul>
     </div>
     <main>
-        <div id="art-container" class="grid"></div>
+        <div class="grid" id="art-gallery"></div>
     </main>
     <script>
-        loadFiles('/src/art', 'art-container', 'image');
+        // JavaScript to dynamically load images from the "art" folder
+        document.addEventListener("DOMContentLoaded", function () {
+            const artGallery = document.getElementById('art-gallery');
+
+            // Array of images in the "art" folder
+            const images = [
+                "16x20 Lighthouse.jpg",
+                "40x40 Old Map.jpg",
+                "8x10 Racecar.jpg",
+                "Abstract Beach.jpg",
+                "abstract boats in sorrento 2.png",
+                "abstract boats in sorrento.png",
+                "Abstract lion.png",
+                "abstract skiier.png",
+                "city war 1.png",
+                "Cyborg bust.png",
+                "F1 Racecar2.png",
+                "flowers 1.png",
+                "future fashion 10.png",
+                "future fashion 2.png",
+                "future fashion 3.png",
+                "future fashion 4.png",
+                "future fashion 5.png",
+                "future fashion 7.png",
+                "future fashion 8.png",
+                "future fashion 9.png",
+                "ginger_fox13_phantasy_male_fox_with_abstract_background_logo_hi_b254b76d-3f9c-43f3-9a9b-3b4f95d161d2.png",
+                "mech2.png",
+                "mech4.png",
+                "Messi 1.png",
+                "Messi 3.png",
+                "Mororad 1.png",
+                "Mororad 13.png",
+                "Mororad 15.png",
+                "Mororad 16.png",
+                "Mororad 2.png",
+                "Mororad 3.png",
+                "Mororad 4.png",
+                "Mororad 5.png",
+                "Mororad 6.png",
+                "Mororad 8.png",
+                "Mororad 9.png",
+                "Original Image.png",
+                "post apocolypse video game.png",
+                "Ronaldo 2.png",
+                "Ronaldo and Messi 3.png"
+            ];
+
+            // Generate the HTML for each image
+            images.forEach(image => {
+                const link = document.createElement('a');
+                link.href = `art/${image}`;
+                link.target = "_blank";
+
+                const img = document.createElement('img');
+                img.src = `art/${image}`;
+                img.alt = image;
+                img.className = "thumbnail";
+
+                link.appendChild(img);
+                artGallery.appendChild(link);
+            });
+        });
     </script>
 </body>
 </html>
