@@ -7,5 +7,6 @@
         { "source": "/songs", "destination": "/songs.html" },
         { "source": "/podcasts", "destination": "/podcasts.html" },
         { "source": "/api/files", "destination": "/api/list-files.js" }
-    ]
+    ],
+    "ignore": ["archive/*"]
 }
